@@ -22,3 +22,28 @@ CREATE TABLE MUNICIPIO(
     municipio varchar(255),
     UF varchar(2)
 );
+CREATE TABLE CURSOS(
+    cod_denominacao int PRIMARY KEY,
+    denominacao varchar(255),
+    grau_denominacao varchar(50),
+    descricao_rotulo_sugerido varchar(500)
+);
+
+CREATE TABLE GRADUACAO(
+    num_ano int,
+    cod_curso int,
+    ano_in_grad int,
+    cod_turma int
+);
+
+CREATE TABLE GENERO(
+    num_ano int,
+    cod_curso int,
+    tp_sexo char(1)
+);
+
+CREATE TABLE IDADE(
+    num_ano int,
+    cod_curso int,
+    num_idade int
+);
