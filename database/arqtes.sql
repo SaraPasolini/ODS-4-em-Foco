@@ -1,45 +1,21 @@
-CREATE TABLE Curso(
-  cod_Curso int PRIMARY KEY
-  num_Ano int
-  cod_IES int
-  cod_OraganizacaoAcademica int
-  cod_Grupo int
-  cod_Modaliade int
-  cod_Municipio_Curso int
-  cod_UF_Curso int
-  cod_Regiao_Curso int
+CREATE TABLE IES(
+    codigo_da_ies int PRIMARY KEY,
+    nome_da_ies str,
+    sigla str,
+    categoria_da_ies int,
+    comutaria int,
+    confessionante int,
+    filantropica int,
+    organizacao_academica int,
+    codigo_municipio int FOREIGN KEY REFERENCES,
+    situacao int
+);
 
-)
+CREATE TABLE ENADE(
+     num_ano int PRIMARY KEY,
+     cod_curso int FOREIGN KEY REFERENCES PRIMARY KEY,
+     cod_ies int FOREIGN KEY REFERENCES PRIMARY KEY,
+     cod_modalidade int,
+     cod_municipio int FOREIGN KEY REFERENCES
+);
 
-
-CREATE TABLE Estudante (
-    id_Estudante int PRIMARY KEY
-    num_ano int
-    cod_curso int FOREIGN KEY
-    sexo char
-    num_Idade int 
-    Question_101 char
-    Question_126 char
-)
-
-CREATE TABLE Prova (
-    id_Prova int PRIMARY KEY
-    num_Ano int
-    cod_Curso FOREIGN KEY
-    tp_Pres int
-    Notas int 
-    NT_GER 
-    NT_FG 
-    NT_CE 
-    -- Perguntar a professora sobre o tipo das variaveis ( se é int ou char)
-
-
-) 
-
-CREATE TABLE PercepcaoProva (
-    id_Percepcao int PRIMARY KEY
-    num_Ano int
-    cod_Curso FOREIGN KEY
-    Resposta str -- string  
-    
-)
