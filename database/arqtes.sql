@@ -10,12 +10,15 @@ CREATE TABLE IES(
     codigo_municipio int FOREIGN KEY REFERENCES,
     situacao int
 );
-
 CREATE TABLE ENADE(
-     num_ano int PRIMARY KEY,
-     cod_curso int FOREIGN KEY REFERENCES PRIMARY KEY,
-     cod_ies int FOREIGN KEY REFERENCES PRIMARY KEY,
-     cod_modalidade int,
-     cod_municipio int FOREIGN KEY REFERENCES
+    num_ano int PRIMARY KEY,
+    cod_curso int FOREIGN KEY REFERENCES PRIMARY KEY,
+    cod_ies int FOREIGN KEY REFERENCES PRIMARY KEY,
+    cod_modalidade int,
+    cod_municipio int FOREIGN KEY REFERENCES
 );
-
+CREATE TABLE MUNICIPIO(
+    codigo_municipio int PRIMARY KEY,
+    municipio varchar(255),
+    UF varchar(2)
+);
