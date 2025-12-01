@@ -23,3 +23,16 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+const unzipper = require('unzipper');
+const fs = require('fs');
+const path = require('path');
+
+Cypress.Commands.add("unzipFile", (zipPath, outputPath) => {
+  return new Promise((resolve, reject) => {
+    fs.createReadStream(zipPath)
+      .pipe(unzipper.Extract({ path: outputPath }))
+      .on('close', () => resolve())
+      .on('error', (err) => reject(err));
+  });
+});
