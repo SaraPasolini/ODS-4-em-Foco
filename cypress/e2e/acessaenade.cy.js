@@ -10,27 +10,42 @@ describe('Preencher formulário e baixar documento', () => {
     
   })
 })
-describe('Baixar, descompactar e limpar ZIP', () => {
-  it('Baixa o arquivo, descompacta e apaga o zip', () => {
-      
-    Cypress.on('uncaught:exception', () => false);
+const fs = require("fs");
+const https = require("https");
+const http = require("http");
+const path = require("path");
 
-    cy.visit('https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enade');
+module.exports = {
+  downloadFile({ url }) {
+    const downloadFolder = path.join(__dirname, "../../download");
 
-    cy.contains('Microdados do Enade 2023')
-      .click({ force: true });
+    // cria a pasta se não existir
+    if (!fs.existsSync(downloadFolder)) {
+      fs.mkdirSync(downloadFolder, { recursive: true });
+    }
 
-    // Aguarda o download (ajuste o tempo)
-    cy.wait(8000);
+    const fileName = url.split("/").pop();
+    const filePath = path.join(downloadFolder, fileName);
 
-    const downloadsFolder = 'cypress/downloads';
-    const zipFile = `${downloadsFolder}/enade2023.zip`;
-    const outputFolder = `${downloadsFolder}/enade2023`;
+    const client = url.startsWith("https") ? https : http;
 
-    // Descompacta o ZIP
-    cy.task('unzipFile', { zipPath: zipFile, outputPath: outputFolder });
+    return new Promise((resolve, reject) => {
+      const file = fs.createWriteStream(filePath);
 
-    // Depois exclui o arquivo ZIP
-    cy.task('deleteFile', zipFile);
-  });
-});
+      client.get(url, (response) => {
+        if (response.statusCode !== 200) {
+          reject(`Erro ao baixar arquivo: ${response.statusCode}`);
+          return;
+        }
+
+        response.pipe(file);
+
+        file.on("finish", () => {
+          file.close(() => resolve(filePath));
+        });
+      }).on("error", (err) => {
+        reject(err);
+      });
+    });
+  }
+};
