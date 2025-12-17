@@ -4,14 +4,14 @@ const path = require('path');
 
 // CONFIG DO BANCO
 const db = {
-  host: 'localhost',
-  user: 'root',
-  password: 'sua_senha',
-  database: 'seu_banco'
+  host: "localhost",
+  user: "root",
+  password: "G19henrique",
+  database: "enem_plus"
 };
 
 // PASTA DOS ARQUIVOS
-const pasta = path.join(__dirname, "pasta_x");
+const pasta = path.join(__dirname, "pasta_x"); /* <----- pasta das informaçoes */
 
 // FUNÇÃO PRINCIPAL
 async function importar() {
