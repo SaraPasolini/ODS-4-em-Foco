@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "cypress": "^15.7.0",
+    "fs": "^0.0.1-security",
+    "mysql2": "^3.15.3",
+    "path": "^0.12.7",
+    "unzipper": "^0.12.3"
+  },
+  "name": "ods-4-em-focotest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaraPasolini/ODS-4-em-Foco.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/SaraPasolini/ODS-4-em-Foco/issues"
+  },
+  "homepage": "https://github.com/SaraPasolini/ODS-4-em-Foco#readme"
+}
