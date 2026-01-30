@@ -1,49 +1,70 @@
-CREATE TABLE IES(
-    codigo_da_ies int PRIMARY KEY,
-    nome_da_ies str,
-    sigla str,
-    categoria_da_ies int,
-    comutaria int,
-    confessionante int,
-    filantropica int,
-    organizacao_academica int,
-    codigo_municipio int FOREIGN KEY REFERENCES,
-    situacao int
-);
-CREATE TABLE ENADE(
-    num_ano int PRIMARY KEY,
-    cod_curso int FOREIGN KEY REFERENCES PRIMARY KEY,
-    cod_ies int FOREIGN KEY REFERENCES PRIMARY KEY,
-    cod_modalidade int,
-    cod_municipio int FOREIGN KEY REFERENCES
-);
 CREATE TABLE MUNICIPIO(
-    codigo_municipio int PRIMARY KEY,
+    codigo_municipio INT PRIMARY KEY,
     municipio varchar(255),
     UF varchar(2)
 );
+CREATE TABLE IES(
+    codigo_da_ies  INT PRIMARY KEY,
+    nome_da_ies varchar(255),
+    sigla varchar(30),
+    categoria_da_ies  INT,
+    comunitaria  INT,
+    confessionante  INT,
+    filantropica  INT,
+    organizacao_academica  INT,
+    situacao  INT,
+    CONSTRAINT fk_ies_municipio FOREIGN KEY (codigo_municipio)
+        REFERENCES MUNICIPIO(codigo_municipio)
+);
 CREATE TABLE CURSOS(
-    cod_denominacao int PRIMARY KEY,
+    cod_denominacao INT PRIMARY KEY,
     denominacao varchar(255),
     grau_denominacao varchar(50),
     descricao_rotulo_sugerido varchar(500)
 );
+CREATE TABLE ENADE(
+    num_ano INT ,
+    cod_curso INT ,
+    cod_ies INT ,
+    cod_modalidade INT,
+    cod_municipio INT,
+    PRIMARY KEY (num_ano, cod_curso, cod_ies),
+    CONSTRAINT fk_enade_curso
+        FOREIGN KEY (cod_curso)
+        REFERENCES CURSOS(cod_denominacao),
+    CONSTRAINT fk_enade_ies
+        FOREIGN KEY (cod_ies)
+        REFERENCES IES(codigo_da_ies),
+    CONSTRAINT fk_enade_municipio
+        FOREIGN KEY (cod_municipio)
+        REFERENCES MUNICIPIO(codigo_municipio)
+);
 
 CREATE TABLE GRADUACAO(
-    num_ano int,
-    cod_curso int,
-    ano_in_grad int,
-    cod_turma int
+    num_ano INT,
+    cod_curso INT,
+    ano_in_grad INT,
+    cod_turma INT,
+    PRIMARY KEY (num_ano, cod_curso),
+    CONSTRAINT fk_graduacao_curso
+        FOREIGN KEY (cod_curso)
+        REFERENCES CURSOS(cod_denominacao)
 );
 
 CREATE TABLE GENERO(
-    num_ano int,
-    cod_curso int,
-    tp_sexo char(1)
+    num_ano INT,
+    cod_curso INT,
+    tp_sexo char(1),
+    CONSTRAINT fk_genero_curso
+        FOREIGN KEY (cod_curso)
+        REFERENCES CURSOS(cod_denominacao)
 );
 
 CREATE TABLE IDADE(
-    num_ano int,
-    cod_curso int,
-    num_idade int
+    num_ano INT,
+    cod_curso INT,
+    num_idade INT,
+    CONSTRAINT fk_idade_curso
+        FOREIGN KEY (cod_curso)
+        REFERENCES CURSOS(cod_denominacao)
 );
