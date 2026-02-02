@@ -1,51 +1,38 @@
-describe('Preencher formulário e baixar documento', () => {
-  it('Preenche os campos e baixa o arquivo', () => {
-      Cypress.on('uncaught:exception', (err, runnable) => {
-          return false;
-        });
-    cy.visit('https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enade')
-    cy.contains('Microdados do Enade 2023')
-    .should('be.visible')
-    .click({ force: true });
-    
-  })
-})
-const fs = require("fs");
-const https = require("https");
-const http = require("http");
-const path = require("path");
+describe('Baixar microdados do Enade por ano', () => {
 
-module.exports = {
-  downloadFile({ url }) {
-    const downloadFolder = path.join(__dirname, "../../download");
+  before(() => {
+    // Ignora erros JS do site do governo
+    Cypress.on('uncaught:exception', () => false);
+  });
 
-    // cria a pasta se não existir
-    if (!fs.existsSync(downloadFolder)) {
-      fs.mkdirSync(downloadFolder, { recursive: true });
-    }
+  it('Entra no site e baixa todos os microdados do Enade', () => {
 
-    const fileName = url.split("/").pop();
-    const filePath = path.join(downloadFolder, fileName);
+    cy.visit('https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enade');
 
-    const client = url.startsWith("https") ? https : http;
+    cy.contains('Microdados do Enade')
+      .should('be.visible');
 
-    return new Promise((resolve, reject) => {
-      const file = fs.createWriteStream(filePath);
+    // percorre todos os links da página
+    cy.get('a').each(($link) => {
 
-      client.get(url, (response) => {
-        if (response.statusCode !== 200) {
-          reject(`Erro ao baixar arquivo: ${response.statusCode}`);
-          return;
+      const texto = $link.text().trim();
+
+      // filtra apenas os links de microdados
+      if (texto.startsWith('Microdados do Enade')) {
+
+        const url = $link.prop('href');
+        const ano = texto.replace('Microdados do Enade', '').trim();
+
+        if (url && ano) {
+          cy.log(`Baixando Microdados do Enade ${ano}`);
+
+          // chama o Node.js para baixar o arquivo
+          cy.task('downloadFile', { url });
         }
-
-        response.pipe(file);
-
-        file.on("finish", () => {
-          file.close(() => resolve(filePath));
-        });
-      }).on("error", (err) => {
-        reject(err);
-      });
+      }
     });
-  }
-};
+  });
+});
+
+
+
