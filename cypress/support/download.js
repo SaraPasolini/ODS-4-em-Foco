@@ -4,37 +4,27 @@ const http = require("http");
 const path = require("path");
 
 function downloadFile({ url }) {
+  const downloadFolder = path.join(__dirname, "../../download");
+
+  if (!fs.existsSync(downloadFolder)) {
+    fs.mkdirSync(downloadFolder, { recursive: true });
+  }
+
+  const fileName = url.split("/").pop();
+  const filePath = path.join(downloadFolder, fileName);
+
+  const client = url.startsWith("https") ? https : http;
+
   return new Promise((resolve, reject) => {
-
-    const fileName = url.split("/").pop();
-
-    // tenta extrair o ano do nome do arquivo
-    const anoMatch = fileName.match(/\d{4}/);
-    const ano = anoMatch ? anoMatch[0] : "desconhecido";
-
-    const downloadFolder = path.join(__dirname, "../../download", ano);
-
-    // cria pasta se não existir
-    if (!fs.existsSync(downloadFolder)) {
-      fs.mkdirSync(downloadFolder, { recursive: true });
-    }
-
-    const filePath = path.join(downloadFolder, fileName);
-
-    // evita baixar duas vezes
-    if (fs.existsSync(filePath)) {
-      console.log(`Arquivo já existe: ${fileName}`);
-      resolve(filePath);
-      return;
-    }
-
-    const client = url.startsWith("https") ? https : http;
     const file = fs.createWriteStream(filePath);
 
     client.get(url, (response) => {
+      console.log(`Tentando baixar: ${url} - Status: ${response.statusCode}`); // Log adicionado
 
       if (response.statusCode !== 200) {
-        reject(`Erro ${response.statusCode} ao baixar ${url}`);
+        const errorMsg = `Erro ao baixar arquivo: ${response.statusCode} para ${url}`;
+        console.error(errorMsg); // Log de erro
+        reject(errorMsg);
         return;
       }
 
@@ -42,11 +32,13 @@ function downloadFile({ url }) {
 
       file.on("finish", () => {
         file.close(() => {
-          console.log(`Download concluído: ${fileName}`);
+          console.log(`Download concluído: ${filePath}`); // Log de sucesso
           resolve(filePath);
         });
       });
+
     }).on("error", (err) => {
+      console.error(`Erro de rede ao baixar ${url}: ${err.message}`); // Log de erro de rede
       reject(err);
     });
   });
