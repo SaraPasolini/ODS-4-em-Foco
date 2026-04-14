@@ -1,12 +1,12 @@
 # Nome do projeto
 
-`CURSO: Análise e Desenvolvimento de Sistemas`
+`CURSO: Análise e Desenvolvimento de Sistemas / sistema de informação`
 
-`DISCIPLINA: Trabalho Interdisciplinar Aplicação Móvel`
+`TEMA: educaçao de qualidade (ods tema 4)`
 
-`Xº semestre/ANO`
+`ANO 2025/2026`
 
-Escreva um ou dois parágrafos resumindo o objetivo do seu projeto.
+Este projeto tem como objetivo promover maior clareza na visualização dos dados públicos governamentais, visando aprimorar a análise e a apresentação dessas informações. Para isso, adota-se como referência um modelo de organização e exibição inspirado no Power BI, possibilitando uma interpretação mais eficiente, estruturada e acessível dos dados.
 
 ## Integrantes
 
