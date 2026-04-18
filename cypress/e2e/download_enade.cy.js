@@ -6,6 +6,9 @@ describe('Bot INEP Enade - Download 1 por 1 e Unzip', () => {
   it('Executa o fluxo completo de download e extração', () => {
     cy.visit('https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enade' );
 
+    // Espera a página carregar completamente
+    cy.wait(10000);
+
     // Aceita cookies
     cy.get('body').then(($body) => {
       if ($body.find('button:contains("Aceitar cookies")').length > 0) {
@@ -23,17 +26,19 @@ describe('Bot INEP Enade - Download 1 por 1 e Unzip', () => {
       enadeLinks.forEach((el, index) => {
         cy.log(`[${index + 1}/${enadeLinks.length}] Iniciando download...`);
         
-        // Clica no link
-        cy.wrap(el).click({ force: true });
+        // Faz download programático
+        cy.task('downloadFile', { url: el.href }).then((filePath) => {
+          cy.log(`Download concluído: ${filePath}`);
+        });
 
-        // Espera 1 minuto entre cada clique
-        cy.wait(60000);
+        // Espera 5 segundos entre cada download para não sobrecarregar
+        cy.wait(5000);
 
         // Se for o último link, espera um pouco mais e descompacta
         if (index === enadeLinks.length - 1) {
-          cy.log('Todos os downloads iniciados. Aguardando 2 minutos finais...');
-          // Espera 2 minutos extras para garantir que o último arquivo terminou de baixar no disco
-          cy.wait(120000); 
+          cy.log('Todos os downloads iniciados. Aguardando 30 segundos finais...');
+          // Espera 30 segundos extras para garantir que o último arquivo terminou de baixar no disco
+          cy.wait(30000); 
           
           cy.log('Iniciando descompactação com adm-zip...');
           cy.task('unzipEnadeFiles').then((msg) => {

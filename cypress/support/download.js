@@ -4,7 +4,7 @@ const http = require("http");
 const path = require("path");
 
 function downloadFile({ url }) {
-  const downloadFolder = path.join(__dirname, "../../download");
+  const downloadFolder = path.join(__dirname, "../downloads");
 
   if (!fs.existsSync(downloadFolder)) {
     fs.mkdirSync(downloadFolder, { recursive: true });

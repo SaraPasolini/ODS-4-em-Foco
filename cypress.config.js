@@ -2,11 +2,13 @@ const { defineConfig } = require("cypress");
 const AdmZip = require("adm-zip");
 const path = require("path");
 const fs = require("fs");
+const { downloadFile } = require("./cypress/support/download");
 
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       on('task', {
+        downloadFile,
         unzipEnadeFiles() {
           // Caminho da pasta de downloads do Cypress
           const downloadDir = path.join(process.cwd(), 'cypress', 'downloads');
@@ -39,6 +41,7 @@ module.exports = defineConfig({
       });
     },
     baseUrl: 'https://www.gov.br',
-    defaultCommandTimeout: 10000,
+    defaultCommandTimeout: 30000,
+    pageLoadTimeout: 120000,
   },
 } );

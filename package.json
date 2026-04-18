@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "adm-zip": "^0.5.16",
+    "adm-zip": "^0.5.17",
+    "csv-parser": "^3.2.0",
     "dotenv": "^17.3.1",
     "fs": "^0.0.1-security",
     "mysql2": "^3.15.3",
@@ -28,6 +29,6 @@
   },
   "homepage": "https://github.com/SaraPasolini/ODS-4-em-Foco#readme",
   "devDependencies": {
-    "cypress": "^15.11.0"
+    "cypress": "^15.14.0"
   }
 }
