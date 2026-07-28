@@ -1,47 +1,56 @@
-const { defineConfig } = require("cypress");
-const AdmZip = require("adm-zip");
-const path = require("path");
-const fs = require("fs");
-const { downloadFile } = require("./cypress/support/download");
+const { defineConfig } = require('cypress');
+const fs = require('fs');
+const path = require('path');
+const https = require('https');
+const http = require('http');
 
 module.exports = defineConfig({
+  taskTimeout: 1800000,
+
   e2e: {
     setupNodeEvents(on, config) {
+
       on('task', {
-        downloadFile,
-        unzipEnadeFiles() {
-          // Caminho da pasta de downloads do Cypress
-          const downloadDir = path.join(process.cwd(), 'cypress', 'downloads');
-          // Caminho da pasta de destino Unzip
-          const unzipDir = path.join(downloadDir, 'Unzip');
 
-          // Cria a pasta Unzip se não existir
-          if (!fs.existsSync(unzipDir)) {
-            fs.mkdirSync(unzipDir, { recursive: true });
-          }
+        downloadFile({ url }) {
+          return new Promise((resolve, reject) => {
+            const fileName = url.split('/').pop();
+            const downloadsDir = path.join(__dirname, 'downloads');
 
-          // Lê todos os arquivos baixados
-          const files = fs.readdirSync(downloadDir);
-          
-          files.forEach(file => {
-            if (file.toLowerCase().endsWith('.zip')) {
-              const filePath = path.join(downloadDir, file);
-              try {
-                const zip = new AdmZip(filePath);
-                // Extrai para a pasta Unzip
-                zip.extractAllTo(unzipDir, true);
-                console.log(`Sucesso ao descompactar: ${file}`);
-              } catch (err) {
-                console.error(`Erro ao descompactar ${file}: ${err.message}`);
-              }
+            if (!fs.existsSync(downloadsDir)) {
+              fs.mkdirSync(downloadsDir);
             }
+
+            const filePath = path.join(downloadsDir, fileName);
+            const file = fs.createWriteStream(filePath);
+
+            const protocol = url.startsWith('https') ? https : http;
+
+            const options = {
+              rejectUnauthorized: false
+            };
+
+            protocol.get(url, options, (response) => {
+              response.pipe(file);
+
+              file.on('finish', () => {
+                file.close();
+                resolve(filePath);
+              });
+            }).on('error', (err) => {
+              fs.unlink(filePath, () => {});
+              reject(err);
+            });
           });
-          return "Processo de Unzip finalizado!";
+        },
+
+        extractAllEnadeFiles() {
+          return 'Task de extração mantida registrada.';
         }
+
       });
-    },
-    baseUrl: 'https://www.gov.br',
-    defaultCommandTimeout: 30000,
-    pageLoadTimeout: 120000,
-  },
-} );
+
+      return config;
+    }
+  }
+});

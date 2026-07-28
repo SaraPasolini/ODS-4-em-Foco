@@ -1,0 +1,8 @@
+.env
+node_modules/
+cypress/downloads/
+cypress/e2e/Enad_arquivos/
+*.zip
+*.rar
+.DS_Store
+*.log

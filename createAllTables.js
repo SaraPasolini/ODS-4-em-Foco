@@ -88,6 +88,20 @@ async function createTables() {
       );
     `);
 
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS enade_agregado (
+        id SERIAL PRIMARY KEY,
+        nu_ano INT NOT NULL,
+        co_ies INT NOT NULL,
+        co_curso INT NOT NULL,
+        co_modalidade INT NOT NULL,
+        co_uf_curso INT NOT NULL,
+        co_munic_curso BIGINT NOT NULL,
+        qtd_participantes BIGINT NOT NULL,
+        UNIQUE (nu_ano, co_ies, co_curso, co_modalidade, co_uf_curso, co_munic_curso)
+      );
+    `);
+
     console.log('✅ Todas as tabelas criadas com sucesso!');
 
   } catch (err) {
