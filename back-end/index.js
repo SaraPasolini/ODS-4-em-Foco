@@ -1,33 +1,22 @@
-const { processarAgregacao } = require('./processador');
-const path = require('path');
-const fs = require('fs');
-
-const caminhoPasta = path.join(
-  __dirname,
-  '..',
-  'cypress',
-  'e2e',
-  'Enad_arquivos',
-  'microdados_enade_2023',
-  'Microdados_Enade_2023',
-  'DADOS'
-);
-
-console.log('Caminho:', caminhoPasta);
-console.log('Existe?', fs.existsSync(caminhoPasta));
+const db = require('../db');
+const { ANOS_DISPONIVEIS, carregarAnosEnade } = require('./processador');
 
 async function main() {
-  const client = await require('../db').connect();
+  const client = await db.connect();
 
   try {
-    const resultado = await processarAgregacao(caminhoPasta, client);
-    console.log(`Resumo agregação: ${resultado.linhasLidas} lidas | ${resultado.linhasValidas} válidas | ${resultado.linhasIgnoradas} ignoradas | ${resultado.grupos} grupos | ${resultado.totalInserido} inseridos`);
+    const resultado = await carregarAnosEnade(ANOS_DISPONIVEIS, client);
+
+    if (resultado.falhas.length) {
+      process.exitCode = 1;
+    }
   } finally {
     client.release();
   }
 }
 
 main().catch((erro) => {
-  console.error('Erro no processamento:', erro);
+  console.error('Erro no processamento:');
+  console.error(erro);
   process.exit(1);
 });
