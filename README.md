@@ -1,5 +1,13 @@
 # ODS 4 em Foco - ENADE
 
+`CURSO: Analise e Desenvolvimento de Sistemas / Sistema de Informacao`
+
+`TEMA: Educacao de qualidade (ODS 4)`
+
+`ANO 2025/2026`
+
+Este projeto tem como objetivo promover maior clareza na visualizacao de dados publicos governamentais, aprimorando a analise e a apresentacao dessas informacoes em um dashboard Power BI. Para isso, implementa um pipeline de dados baseado nos microdados publicos do ENADE.
+
 ## Integrantes
 
 Sara de Almeida Passoline  
